@@ -6,7 +6,6 @@ import random
 import numbers
 from imageio import imread
 from scipy import misc
-# from imageio import imresize
 import tensorlayer as tl
 from six.moves import cPickle
 from utilities import *
@@ -29,14 +28,8 @@ class CustomDataLoader(object):
                 # self.ds0 maybe doesn't have is_train attribute, then it has no test mode, set remainder = False
                 remainder = False
         
-        # use_list=False, for each in data point, add a batch dimension (return in numpy array)
         self.ds1 = tensorpack.dataflow.BatchData(self.ds0, self.batch_size,remainder=remainder, use_list=False,) 
-        
-        # use 1 thread in test to avoid randomness (test should be deterministic)
-        # self.ds2 = tensorpack.dataflow.PrefetchDataZMQ(self.ds1, nr_proc=self.num_threads if not remainder else 1)
         self.ds2 = tensorpack.dataflow.PrefetchDataZMQ(self.ds1, self.num_threads)
-        
-        # required by tensorlayer package
         self.ds2.reset_state()
     
     def generator(self):
@@ -96,7 +89,6 @@ class BaseImageDataset(BaseDataset):
     def _get_one_data(self, data, label):
         im = imread(data, pilmode='RGB')
         if self.imsize:
-            # im = misc.imresize(im, (self.imsize, self.imsize))
             im = np.array(Image.fromarray(im).resize((self.imsize,self.imsize)))
         return im, label
 
