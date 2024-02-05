@@ -43,15 +43,6 @@ class MSCLoss(nn.Module):
 
         assigned_tgt_labels = self.__target_pseudolabels(sim_matrix, src_labels)  #pseudo_tgt_labels
 
-        # select unk target
-        # v1 sum
-        # sum_line_matrix = torch.sum(sim_matrix, dim=0)
-        # sum_ind = torch.sort(sum_line_matrix, descending=False, dim=0).indices
-        # select_sum_ind = sum_ind[[jj for jj in range(0, self.n_get_unk)]]
-        # # for jj in range(0, self.n_get_unk):
-        # #     assigned_tgt_labels[select_sum_ind[jj]] = self.unk_label
-
-        # v2 max+sum
         std_list = []
         select_sum_ind = []
         line_max = torch.max(sim_matrix,0)[0]
