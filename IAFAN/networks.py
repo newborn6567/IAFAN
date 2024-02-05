@@ -79,7 +79,7 @@ class AlexNetFc(BaseFeatureExtractor):#
     def __init__(self, device, model_name='alexnet', model_path=None, normalize=True):
         super(AlexNetFc, self).__init__()
         model_alexnet = models.alexnet(pretrained=False)
-        pre = torch.load(model_path)  # 进行加载
+        pre = torch.load(model_path)  
         model_alexnet.load_state_dict(pre)
         if model_path or normalize:
             self.normalize = True
