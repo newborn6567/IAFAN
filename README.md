@@ -8,7 +8,7 @@ to separate unknown samples from target data to avoid negative transfer caused b
 
 ## Usage
 ### Request
-numpy<1.21.4<br>
+numpy==1.21.4<br>
 python==2.8.10<br>
 torch==1.10.0<br>
 torchvision==0.11.1<br>
