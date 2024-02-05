@@ -7,8 +7,6 @@ import torch.optim as optim
 from torch.autograd.variable import *
 import os
 from collections import Counter
-# import matplotlib.pyplot as plt
-
 
 class Accumulator(dict):
     def __init__(self, name_or_names, accumulate_fn=np.concatenate):
@@ -70,15 +68,12 @@ def addkey(diction, key, global_vars):
     diction[key] = global_vars[key]
 
 def track_scalars(logger, names, global_vars):
-    # print(global_vars)
     values = {}
     for name in names:
         addkey(values, name, global_vars)
     for k in values:
-        # values[k] = variable_to_numpy(values[k])
         values[k] = float(format(variable_to_numpy(values[k]), '.5f'))
     for k, v in values.items():
-        # v = float(format(v, '.6f'))
         logger.log_scalar(k, v)
     print(values)
 
@@ -153,34 +148,8 @@ class Logger(object):
             step = self.step
         with self.writer.as_default():
             tf.summary.scalar(tag, value, step)
-        # summary = tf.Summary(value = [tf.Summary.Value(tag = tag, simple_value = value)])
-        # self.writer.add_summary(summary, step)
             self.writer.flush()
 
-    # def log_images(self, tag, images, step = None):
-    #     if not step:
-    #         step = self.step
-        
-    #     im_summaries = []
-    #     for nr, img in enumerate(images):
-    #         s = StringIO()
-            
-    #         if len(img.shape) == 2:
-    #             img = np.expand_dims(img, axis=-1)
-            
-    #         if img.shape[-1] == 1:
-    #             img = np.tile(img, [1, 1, 3])
-    #         img = to_rgb_np(img)
-    #         plt.imsave(s, img, format = 'png')
-
-    #         img_sum = tf.Summary.Image(encoded_image_string = s.getvalue(),
-    #                                    height = img.shape[0],
-    #                                    width = img.shape[1])
-    #         im_summaries.append(tf.Summary.Value(tag = '%s/%d' % (tag, nr),
-    #                                              image = img_sum))
-    #     summary = tf.Summary(value = im_summaries)
-    #     self.writer.add_summary(summary, step)
-    #     self.writer.flush()
 
     def log_histogram(self, tag, values, step = None, bins = 1000):
         if not step:
@@ -247,8 +216,6 @@ class AccuracyCounter:
         return np.asarray(self.Ncorrect, dtype=float) / np.asarray(self.Ntotal, dtype=float)
 
 def CrossEntropyLoss(label, predict_prob, class_level_weight = None, instance_level_weight = None, epsilon = 1e-12):
-    # print('label.size() = ',label)
-    # print("predict_prob.size() = ",predict_prob)
     N, C = label.size()
     N_, C_ = predict_prob.size()
     
@@ -315,35 +282,6 @@ def EntropyLoss(predict_prob, class_level_weight=None, instance_level_weight=Non
     entropy = -predict_prob*torch.log(predict_prob + epsilon)
     return torch.sum(instance_level_weight * entropy * class_level_weight) / float(N)
 
-# def plot_confusion_matrix(cm, true_classes,pred_classes=None,
-#                           normalize=False,
-#                           title='Confusion matrix',
-#                           cmap=plt.cm.Blues):
-#     import itertools
-#     pred_classes = pred_classes or true_classes
-#     if normalize:
-#         cm = cm.astype(np.float) / np.sum(cm, axis=1, keepdims=True)
-
-#     plt.imshow(cm, interpolation='nearest', cmap=cmap)
-#     plt.title(title)
-#     plt.colorbar(fraction=0.046, pad=0.04)
-#     true_tick_marks = np.arange(len(true_classes))
-#     plt.yticks(true_classes, true_classes)
-#     pred_tick_marks = np.arange(len(pred_classes))
-#     plt.xticks(pred_tick_marks, pred_classes, rotation=45)
-
-
-#     fmt = '.2f' if normalize else 'd'
-#     thresh = cm.max() / 2.
-#     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-#         plt.text(j, i, format(cm[i, j], fmt),
-#                  horizontalalignment="center",
-#                  color="white" if cm[i, j] > thresh else "black")
-
-#     plt.tight_layout()
-#     plt.ylabel('True label')
-#     plt.xlabel('Predicted label')
-#     plt.show()
     
 def extended_confusion_matrix(y_true, y_pred, true_labels=None, pred_labels=None):
  
