@@ -13,7 +13,7 @@ python==2.8.10<br>
 torch==1.10.0<br>
 torchvision==0.11.1<br>
 tensorflow==2.4.1
-### Train
+### Train & Test
 ```
 python IAFAN.py
 ```
