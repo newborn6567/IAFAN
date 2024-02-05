@@ -2,7 +2,6 @@ import os
 from data import *
 from utilities import *
 from networks import *
-# import matplotlib.pyplot as plt
 import numpy as np
 import os.path as osp
 import criterion_factory as cf
@@ -10,9 +9,8 @@ import sys
 import torch
 import scipy.stats
 import mmd
-# import ori_mmd
 import argparse
-SEED = 3407#42
+SEED = 3407
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
@@ -25,11 +23,9 @@ torch.backends.cudnn.enabled = False
 sys.path.append('/root/autodl-tmp/IAFAN')
 
 parser = argparse.ArgumentParser(description='IAFAN')
-# dataset parameters
 parser.add_argument('-root', default='/root/autodl-tmp/OpensetData/', help='root path of dataset')
 parser.add_argument('-s', '--source', default='UCM', help='source domain')
 parser.add_argument('-t', '--target', default='AID', help='target domain')
-
 parser.add_argument('--gpu_id', type=str, default='0', help='gpu id')
 parser.add_argument('--tag', type=str, default='/U2A', help='record tag name')
 parser.add_argument('--mmd_coeff', type=float, default=0.2)
@@ -37,14 +33,11 @@ parser.add_argument('--ce_ep_coeff', type=float, default=0.7)
 parser.add_argument('--select_unk_num_2', type=int, default=2)
 parser.add_argument('--select_unk_num_1', type=int, default=9)
 parser.add_argument('--msc_coeff', type=float, default=0.4)
-
-# model parameters
 parser.add_argument('-b', '--batch_size', default=32, type=int, metavar='N',
                     help='mini-batch size (default: 32)')
 parser.add_argument('-i', '--iters', default=10000, type=int, help='Number of iterations per epoch')
 parser.add_argument('-p', '--test_freq', default=200, type=int,
                     metavar='N', help='print frequency (default: 200)')
-
 parser.add_argument('--seed', default=None, type=int, help='seed for initializing training. ')
 parser.add_argument("--phase", type=str, default='train', choices=['train', 'test', 'analysis'],
                     help="When phase is 'test', only test the model."
@@ -135,8 +128,6 @@ while kk < args.iters:
         im_source = Variable(torch.from_numpy(im_source)).to(device)
         label_source = Variable(torch.from_numpy(label_source)).to(device)
         im_target = Variable(torch.from_numpy(im_target)).to(device)
-
-        # ---------------------------------------------------------------------------------------------------------------------------
         fs1, feature_source, __, cls_predict_s = net_down.forward(im_source)
         ft1, feature_target, __, cls_predict_t = net_down.forward(im_target)
         cls_loss = CrossEntropyLoss(label_source, cls_predict_s)
